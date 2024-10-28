@@ -1,0 +1,109 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Size of the disk
+const int size_disk = 200;
+
+// SCAN algorithm function
+void scan_algorithm(int arr[], int N, int initial, bool direction) {
+    // Sorting the request array
+    sort(arr, arr + N);
+
+    // Variables to store total head movement and the last position
+    int total_movement = 0, last = initial;
+
+    cout << "Order of requests processed: ";
+
+    // If moving towards the left (decreasing)
+    if (direction == 0) {
+        // Process requests smaller than or equal to the initial head position
+        for (int i = N - 1; i >= 0; i--) {
+            if (arr[i] <= initial) {
+                total_movement += abs(arr[i] - last);
+                cout << arr[i] << " ";
+                last = arr[i];
+            }
+        }
+
+        // Moving to the start of the disk if necessary
+        if (last != 0) {
+            total_movement += last; // Move to 0 (start of the disk)
+            cout << "0 ";
+            last = 0;
+        }
+
+        // Now move to the right (increasing)
+        for (int i = 0; i < N; i++) {
+            if (arr[i] > initial) {
+                total_movement += abs(arr[i] - last);
+                cout << arr[i] << " ";
+                last = arr[i];
+            }
+        }
+    }
+    // If moving towards the right (increasing)
+    else {
+        // Process requests greater than or equal to the initial head position
+        for (int i = 0; i < N; i++) {
+            if (arr[i] >= initial) {
+                total_movement += abs(arr[i] - last);
+                cout << arr[i] << " ";
+                last = arr[i];
+            }
+        }
+
+        // Move to the end of the disk if necessary
+        if (last != size_disk - 1) {
+            total_movement += (size_disk - 1 - last); // Move to size_disk - 1
+            cout << size_disk - 1 << " ";
+            last = size_disk - 1;
+        }
+
+        // Now move to the left (decreasing)
+        for (int i = N - 1; i >= 0; i--) {
+            if (arr[i] < initial) {
+                total_movement += abs(arr[i] - last);
+                cout << arr[i] << " ";
+                last = arr[i];
+            }
+        }
+    }
+
+    // Output the total head movement
+    cout << "\nTotal head movement = " << total_movement << endl;
+}
+
+// Main driver function
+int main() {
+    // Total number of requests
+    int N;
+
+    // Input number of requests
+    cout << "Enter the number of disk requests: ";
+    cin >> N;
+
+    // Request array
+    int arr[N];
+
+    // Input disk requests
+    cout << "Enter the disk requests: ";
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+
+    // Initial position of the head pointer
+    int initial;
+    cout << "Enter the initial head position: ";
+    cin >> initial;
+
+    // Input direction (0 for left/decreasing, 1 for right/increasing)
+    bool direction;
+    cout << "Enter initial direction (0 for left, 1 for right): ";
+    cin >> direction;
+
+    // Calling the SCAN algorithm function
+    scan_algorithm(arr, N, initial, direction);
+
+    return 0;
+}
